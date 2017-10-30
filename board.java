@@ -27,7 +27,7 @@ public class board {
 		createBoard();
 		Board[x][y] = "P";
 	}
-	
+	//Displays the 9/9 board.
 	public void displayBoard() {
 		for(int x=0;x<horizontal;x++) {
 			System.out.println("");
