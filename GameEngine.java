@@ -286,10 +286,14 @@ public class GameEngine {
 		
 			if( y == b) {
 				if(	 x+1 == a) {
+					player.decLives();
+					board.set(player,8, 0);
 					board.setEmpty(x, y);
 					return (!value);
 				}
 				else if (x-1 == a ) {
+					player.decLives();
+					board.set(player,8, 0);
 					board.setEmpty(x, y);
 					return (!value);
 				}
@@ -297,10 +301,14 @@ public class GameEngine {
 		 
 			if ( x == a ) {
 				if( y + 1 == b) {
+					player.decLives();
+					board.set(player,8, 0);
 					board.setEmpty(x, y);
 					return (!value);
 				}
 				else if (y - 1 == b) {
+					player.decLives();
+					board.set(player,8, 0);
 					board.setEmpty(x, y);
 					return (!value);
 				}
@@ -312,79 +320,87 @@ public class GameEngine {
 	}
 	
 	public void ninjaMovement() {
-		for ( int i = 0; i <= 5; i++) { 
-			int direction = random.nextInt(4);
 		
+		checkSpy();
+		for ( int i = 0; i <= 5; i++) { 
+			
 			int a = ninjas[i].getX();
 			int b = ninjas[i].getY();
 			
-			moveNinja(ninjas[i], direction , a, b);
+			int direction;
+			
+			int x =0; 
+			int y = 0;
+			do {
+			direction = random.nextInt(4);
+			
+			switch(direction) {
+			
+			case 0:
+				x= a-1;
+				y= b;
+				break;
+			case 1:
+				x= a+1;
+				y = b;
+				break;
+			case 2:
+				x= a;
+				y = b-1;
+				break;
+			case 3:
+				x= a;
+				y = b+1;
+				break;
+			default:
+				System.out.println("Error");
+			
+			}
+			}
+			
+			while(( x < 0 || x > 8) || (y < 0 || y > 8)
+				|| board.at(x, y).getNinja()
+				|| board.at(x,y).getRoom());
+			
+			moveNinja(ninjas[i], direction , x, y);
+		
 		}
 	}
 	
-	public void moveNinja( Character ninjas, int direction, int a, int b) {
+	public void moveNinja( Character ninjas, int direction, int x, int y) {
 	
-		if(a-1 >= 0 && board.at(a-1, b).getEmpty() 
-				&& !board.at(a-1, b).getRoom()
-				&& !board.at(a-1, b).getItem()) {
-			
-				direction = 0;
-		}
-		
-		if(a+1 <= 8 && board.at(a+1, b).getEmpty()
-				&& !board.at(a+1, b).getRoom()
-				&& !board.at(a+1, b).getItem()) {
-				
-				direction = 1;
-		}
-		
-		if(b-1 >= 0 && board.at(a, b-1).getEmpty() 
-				&& !board.at(a, b-1).getRoom()
-				&& !board.at(a, b-1).getItem()) {
-				
-				direction = 2;
-			
-		}
-		
-		if(b+1 <=8 && board.at(a, b+1).getEmpty() 
-				&& !board.at(a, b+1).getRoom()
-				&& !board.at(a, b+1).getItem()) {
-		
-				direction = 3;
-		}
-		
 		switch(direction) {
 			
 			case 0:					
-				ninjas.setX(a-1);
-				ninjas.setY(b);
+				ninjas.setX(x);
+				ninjas.setY(y);
 				
-				board.setEmpty(a, b);
-				board.setNinja(ninjas,a-1,b);
+				board.removeNinja(x+1, y);
+				board.setNinja(ninjas,x,y);
 				break;
 				
 			case 1:	
-				ninjas.setX(a+1);
-				ninjas.setY(b);
+				ninjas.setX(x);
+				ninjas.setY(y);
 				
-				board.setEmpty(a, b);
-				board.setNinja(ninjas,a+1,b);
+				board.removeNinja(x-1, y);
+				board.setNinja(ninjas,x,y);
 				break;
 	
 			case 2:	
-				ninjas.setX(a);
-				ninjas.setY(b-1);
+				ninjas.setX(x);
+				ninjas.setY(y);
 			
-				board.setEmpty(a, b);
-				board.setNinja(ninjas,a,b-1);
+				board.removeNinja(x, y+1);
+				board.setNinja(ninjas,x,y);
 				break;
 					
 			case 3:	
-				ninjas.setX(a);
-				ninjas.setY(b+1);
+				ninjas.setX(x);
+				ninjas.setY(y);
 			
-				board.setEmpty(a, b);
-				board.setNinja(ninjas,a,b+1);
+				board.removeNinja(x, y-1);
+				board.setNinja(ninjas,x,y);
 			break;	
 	default:
 			System.out.println("DEFAULT");
@@ -399,7 +415,7 @@ public class GameEngine {
 		
 	}
 
-	/**public String shoot(String direction) {
+	public String shoot(String direction) {
 		int value = 0;
 		if(player.getAmmo() == 0)
 		if(direction.equals("w") || direction.equals("s"))
