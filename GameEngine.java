@@ -312,53 +312,85 @@ public class GameEngine {
 	}
 	
 	public void ninjaMovement() {
-		int direction = random.nextInt(4);
+		for ( int i = 0; i <= 5; i++) { 
+			int direction = random.nextInt(4);
 		
-		//int r = random.nextInt(6);
-		
-		//int a = ninjas[r].getX();
-		//int b = ninjas[r].getY();
-		
-		int r = 0;
-		
-		while(r < 6) {
-			int a = ninjas[r].getX();
-			int b = ninjas[r].getY();
-		
-			switch(direction) {
-			case 0:	
-				board.setNinja(ninjas[r],a-1,b);
-				board.setEmpty(a, b);
-				ninjas[r].setX(a-1);
-				ninjas[r].setY(b);
+			int a = ninjas[i].getX();
+			int b = ninjas[i].getY();
 			
-			System.out.println((a-1) + " " + b);
-			break;
-		case 1:	
-			board.setNinja(ninjas[r],a+1,b);
-			ninjas[r].setX(a+1);
-			ninjas[r].setY(b);
-			System.out.println((a+1) + " " + b);
-			break;
-		case 2:	
-			board.setNinja(ninjas[r],a,b-1);
-			ninjas[r].setX(a);
-			ninjas[r].setY(b-1);
-			System.out.println(a + " " + (b-1));
-			break;
-		case 3:	
-			board.setNinja(ninjas[r],a,b+1);
-			ninjas[r].setX(a);
-			ninjas[r].setY(b+1);
-			System.out.println(a +" " + (b + 1));
-			break;
-		default:
+			moveNinja(ninjas[i], direction , a, b);
+		}
+	}
+	
+	public void moveNinja( Character ninjas, int direction, int a, int b) {
+	
+		if(a-1 >= 0 && board.at(a-1, b).getEmpty() 
+				&& !board.at(a-1, b).getRoom()
+				&& !board.at(a-1, b).getItem()) {
+			
+				direction = 0;
+		}
+		
+		if(a+1 <= 8 && board.at(a+1, b).getEmpty()
+				&& !board.at(a+1, b).getRoom()
+				&& !board.at(a+1, b).getItem()) {
+				
+				direction = 1;
+		}
+		
+		if(b-1 >= 0 && board.at(a, b-1).getEmpty() 
+				&& !board.at(a, b-1).getRoom()
+				&& !board.at(a, b-1).getItem()) {
+				
+				direction = 2;
+			
+		}
+		
+		if(b+1 <=8 && board.at(a, b+1).getEmpty() 
+				&& !board.at(a, b+1).getRoom()
+				&& !board.at(a, b+1).getItem()) {
+		
+				direction = 3;
+		}
+		
+		switch(direction) {
+			
+			case 0:					
+				ninjas.setX(a-1);
+				ninjas.setY(b);
+				
+				board.setEmpty(a, b);
+				board.setNinja(ninjas,a-1,b);
+				break;
+				
+			case 1:	
+				ninjas.setX(a+1);
+				ninjas.setY(b);
+				
+				board.setEmpty(a, b);
+				board.setNinja(ninjas,a+1,b);
+				break;
+	
+			case 2:	
+				ninjas.setX(a);
+				ninjas.setY(b-1);
+			
+				board.setEmpty(a, b);
+				board.setNinja(ninjas,a,b-1);
+				break;
+					
+			case 3:	
+				ninjas.setX(a);
+				ninjas.setY(b+1);
+			
+				board.setEmpty(a, b);
+				board.setNinja(ninjas,a,b+1);
+			break;	
+	default:
 			System.out.println("DEFAULT");
 			break;
 			
 		}
-		}
-		r++;
 		
 	}
 	
